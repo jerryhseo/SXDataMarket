@@ -212,6 +212,9 @@ public class DataTypeListViewRenderCommand implements MVCRenderCommand {
 		String navigation = ParamUtil.getString( renderRequest, IcecapDataTypeWebKeys.NAVIGATION, IcecapDataTypeConstants.NAVIGATION_ALL);
 		int status = ParamUtil.getInteger( renderRequest, IcecapDataTypeAttributes.STATUS, WorkflowConstants.STATUS_APPROVED);
 		
+		System.out.println("status: "+status);
+		System.out.println("navigation: "+navigation);
+		
 		List<DataType> entriesResults = null;
 	
 		if (navigation.equals(IcecapDataTypeConstants.NAVIGATION_MINE)) {
@@ -250,6 +253,7 @@ public class DataTypeListViewRenderCommand implements MVCRenderCommand {
 			        searchContainer.getOrderByComparator());
 		}
 		
+		System.out.println("Search Result: "+entriesResults.size());
 		searchContainer.setResults(entriesResults);
 		
 		return true;

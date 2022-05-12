@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -100,14 +99,14 @@ public class DataTypeManagementToolbarDisplayContext
 		
 		/* Keywords for searched.  It's set in the management toolbar. */
 		DisplayTerms displayDataTypes = searchContainer.getSearchTerms();
-		_keywords = displayDataTypes.getKeywords();
+		_keywords = Validator.isNotNull(displayDataTypes) ? displayDataTypes.getKeywords() : "";
 		
 		/* Status to be displayed.  It's set in the management toolbar.  */
 		_status = ParamUtil.getInteger(httpServletRequest, IcecapDataTypeAttributes.STATUS, WorkflowConstants.STATUS_ANY);
 		
 		/* Show add button or not */
 		_showAddButton = ParamUtil.getBoolean(httpServletRequest, IcecapDataTypeWebKeys.SHOW_ADD_BUTTON, true);
-		_multipleSelection = ParamUtil.getBoolean( httpServletRequest, IcecapDataTypeWebKeys.MULTIPLE_SELECTION, false);
+		_multipleSelection = ParamUtil.getBoolean( httpServletRequest, IcecapDataTypeWebKeys.MULTIPLE_SELECTION, true);
 		_showScheduled = ParamUtil.getBoolean(httpServletRequest, IcecapDataTypeWebKeys.SHOW_SCHEDULED, false);
 		
 		_themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -137,7 +136,7 @@ public class DataTypeManagementToolbarDisplayContext
 
 		portletURL.setParameter( 
 				IcecapDataTypeWebKeys.MULTIPLE_SELECTION, 
-				Boolean.TRUE.toString());
+				String.valueOf(_multipleSelection));
 
 		portletURL.setParameter(IcecapDataTypeWebKeys.SHOW_ADD_BUTTON, String.valueOf(_showAddButton));
 
@@ -389,10 +388,13 @@ public class DataTypeManagementToolbarDisplayContext
 
 	@Override
 	public CreationMenu getCreationMenu() {
+		
 		if( !DataTypeResourcePermissionHelper.contains(
 				_permissionChecker, 
 				_themeDisplay.getScopeGroupId(), 
-				IcecapDataTypeActionKeys.ADD_DATATYPE)) {
+				"ADD")) {
+			
+			System.out.println("Do not have ADD_DATATYPE permission");
 			return null;
 		}
 		

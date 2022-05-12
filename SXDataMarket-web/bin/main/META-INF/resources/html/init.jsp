@@ -15,8 +15,12 @@
 <liferay-theme:defineObjects />
 <portlet:defineObjects />
 
+<%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PortalUtil"%>
+
 <%
 	String currentURL = themeDisplay.getURLCurrent();
 	String backURL = ParamUtil.getString(renderRequest, "BACK_URL", "");
 	String redirect = ParamUtil.getString(renderRequest, "redirect", "");;
+	
 %>
