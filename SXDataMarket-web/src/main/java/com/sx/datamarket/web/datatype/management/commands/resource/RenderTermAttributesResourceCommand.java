@@ -8,17 +8,30 @@ import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.template.URLTemplateResource;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.sx.icecap.datatype.constants.IcecapDataTypeMVCCommands;
 import com.sx.icecap.datatype.constants.IcecapDataTypeWebPortletKeys;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.portlet.PortletContext;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -47,6 +60,20 @@ public class RenderTermAttributesResourceCommand extends BaseMVCResourceCommand{
 		String tooltip = ParamUtil.getString(resourceRequest, "tooltip");
 		System.out.println("tooltip: "+tooltip);
 		
+		String contextPath = resourceRequest.getContextPath();
+		System.out.println("Context Path: "+contextPath );
+		
+		PortletContext pc = resourceRequest.getPortletSession().getPortletContext();
+		InputStream templatePath = pc.getResourceAsStream("/html/DataTypeManagement/max-length.jsp");
+//				contextPath+"/com/sx/datamarket/web/datatype/management/templates/string-attributes.ftl");
+		System.out.println("Real Path: "+ templatePath.available() );
+		String result = new BufferedReader(new InputStreamReader(templatePath))
+			    .lines().parallel().collect(Collectors.joining("\n"));
+		System.out.println("result: "+result);
+		
+//		List<String> templateFile = Files.readAllLines(Paths.get(contextPath) );
+//		templateFile.stream().forEach(System.out::println);
+		
 		String name = "/com/sx/datamarket/web/datatype/management/templates/string-attributes.ftl";
 		Map<String, Object> context = new HashMap<>();
 		Writer writer = resourceResponse.getWriter();
@@ -71,7 +98,7 @@ public class RenderTermAttributesResourceCommand extends BaseMVCResourceCommand{
 
 			template.processTemplate(unsyncStringWriter);
 
-			System.out.println(unsyncStringWriter);
+//			System.out.println(unsyncStringWriter);
 		
 //		include(resourceRequest, resourceResponse, "/html/DataTypeManagement/string-attributes.jsp" );
 	}

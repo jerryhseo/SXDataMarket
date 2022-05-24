@@ -1,0 +1,52 @@
+<script id="templateNumeric" type="text/template">
+	<tr>
+		{{#minValue}}
+		<td style="padding-right:0px;">
+			<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;"> {{minValue}} </div>
+		</td>
+			{{#minBoundaty}}
+			<td style="padding-left:0; padding-right:0;">
+				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&le;</div>
+			</td>
+			{{/minBoundaty}}
+			{{^minBoundaty}}
+			<td style="padding-left:0; padding-right:0;">
+				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&lt;</div>
+			</td>
+			{{/minBoundaty}}
+		{{/minValue}}
+		<td class="controlPreview" style="padding-right: 2px;">
+			{{#required}}
+				<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+			{{/required}}
+			{{^required}}
+				<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+			{{/required}}
+		</td>
+		{{#unit}}
+			<td style="padding-left: 2px;">
+				<div class="form-control" style="margin-top:1.5rem; padding-left: 0;padding-right: 0;">{{unit}}</div>
+			</td>
+		{{/unit}}
+		{{#maxValue}}
+			{{#maxBoundaty}}
+			<td style="padding-left:0px; padding-right:0px;">
+				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&le;</div>
+			</td>
+			{{/maxBoundaty}}
+			{{^maxBoundaty}}
+			<td style="padding-left:0px; padding-right:0px;">
+				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&lt;</div>
+			</td>
+			{{/maxBoundaty}}
+		<td style="padding-left:0px;">
+			<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;"> {{maxValue}} </div>
+		</td>
+		{{/maxValue}}
+		<td>
+			<button type="button" class="btn btn-default">
+				<i class="icon-remove" />
+			</button>
+		</td>
+	</tr>
+</script>

@@ -1,0 +1,27 @@
+<script id="templateString" type="text/template">
+	<tr>
+		<td class="controlPreview">
+			{{#required}}
+				{{#multipleLine}}
+					<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+				{{/multipleLine}}
+				{{^multipleLine}}
+					<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+				{{/multipleLine}}
+			{{/required}}
+			{{^required}}
+				{{#multipleLine}}
+					<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+				{{/multipleLine}}
+				{{^multipleLine}}
+					<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+				{{/multipleLine}}
+			{{/required}}
+		</td>
+		<td>
+			<button type="button" class="btn btn-default">
+				<i class="icon-remove" />
+			</button>
+		</td>
+	</tr>
+</script>
