@@ -159,8 +159,8 @@
 				</aui:button-row>
 				
 				<aui:select name="termType" label="term-type" helpMessage="term-type-select-help">
-					<aui:option label="String" value="String" selected="true"/>
-					<aui:option label="Numeric" value="Numeric"/>
+					<aui:option label="String" value="String"/>
+					<aui:option label="Numeric" value="Numeric" selected="true"/>
 					<aui:option label="Integer" value="Integer"/>
 					<aui:option label="List" value="List"/>
 					<aui:option label="ListArray" value="ListArray"/>
@@ -295,11 +295,9 @@ $(document).ready(function(){
 	let termType = $('#<portlet:namespace/>termType').val();
 	let currentTerm = dataStructure.createTerm( termType );
 	
-	currentTerm.renderAttributeSection( 'typeSpecific',  '<liferay-ui:message key="string-attributes"/>' );
+	currentTerm.renderAttributeSection( 'typeSpecific',  getTypeSpecificSectionTitle( currentTerm.termType ) );
 	
 	$('#<portlet:namespace/>dataTypeDefiner').change(function(eventObj){
-		let prevTerm = currentTerm;
-		
 		switch( eventObj.originalEvent.target.id ){
 		case '<portlet:namespace/>termDelimiter':
 			dataStructure.getTermDelimiterFormValue( true );
@@ -341,7 +339,7 @@ $(document).ready(function(){
 			}
 			break;
 		case '<portlet:namespace/>termName':
-			if( dataStructure.previewed( currentTerm.termName ) ){
+			if( dataStructure.previewed( currentTerm ) ){
 				// It means the current term is one of the data structure and previewed on the preview panel.
 				// Therefore, we must confirm that the term's name be changed and change preview.
 				$.confirm({
@@ -387,7 +385,13 @@ $(document).ready(function(){
 		case '<portlet:namespace/>termVersion':
 			const changedVersion = currentTerm.getTermVersionFormValue();
 		
-			const validated = dataStructure.validateTermVersion( changedVersion, currentTerm.termVersion );
+			let validated;
+			if( dataStructure.previewed( currentTerm ) ){
+				validated = Term.validateTermVersion( changedVersion, currentTerm.termVersion );
+			}
+			else{
+				validated = SX.Term.validateTermVersion( changedVersion );
+			}
 			
 			if( validated === true ){
 				currentTerm.termVersion = changedVersion;
@@ -400,60 +404,137 @@ $(document).ready(function(){
 			break;
 		case '<portlet:namespace/>displayName':
 			currentTerm.getDisplayNameFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+		
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 			break;
 		case '<portlet:namespace/>definition':
 			currentTerm.getDefinitionFormValue(true);
 			break;
 		case '<portlet:namespace/>tooltip':
 			currentTerm.getTooltipFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 			break;
 		case '<portlet:namespace/>synonyms':
 			currentTerm.getSynonymsFormValue(true);
 			break;
 		case '<portlet:namespace/>mandatory':
 			currentTerm.getMandatoryFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 			break;
 		case '<portlet:namespace/>value':
 			currentTerm.getValueFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 			break;
 		case '<portlet:namespace/>minLength':
-			currentTerm.getMinLengthFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+			const changedValue = Number( currentTerm.getMinLengthFormValue() );
+			console.log( 'Changed number: '+changedValue );
+			if( isNaN( changedValue ) || changedValue <= 0){
+				$.alert('Minimum length should be an interger larger than 0.');
+				currentTerm.setMinLengthFormValue()
+			}
+			else{
+				currentTerm.minLength = changedValue;
+				if( dataStructure.previewed( currentTerm ) ){
+					dataStructure.refreshSelectedTermPreview();
+				}
+			}
+			
 			break;
 		case '<portlet:namespace/>maxLength':
-			const minValue = currentTerm.getMinLengthFormValue();
-			const maxValue = currentTerm.getMaxLengthFormValue();
-			if( maxValue < minValue ){
-				$.alert('Maximum value should be larger than minimum value.');
+			const minLength = currentTerm.getMinLengthFormValue();
+			const maxLength = currentTerm.getMaxLengthFormValue();
+			if( maxLength < minLength ){
+				$.alert('Maximum length should be larger than minimum length.');
 				currentTerm.setMaxLengthFormValue();
 			}
 			else{
 				currentTerm.getMaxLengthFormValue(true);
-				dataStructure.refreshSelectedTermPreview();
+				if( dataStructure.previewed( currentTerm ) ){
+					dataStructure.refreshSelectedTermPreview();
+				}
 			}
 			break;
 		case '<portlet:namespace/>multipleLine':
 			currentTerm.getMultipleLineFormValue(true);
-			dataStructure.refreshSelectedTermPreview();
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 			break;
 		case '<portlet:namespace/>validationRule':
-			currentTerm.getValidationruleFormValue(true);
+			currentTerm.getValidationRuleFormValue(true);
 			break;
+		case '<portlet:namespace/>minValue': {
+			const preValue = currentTerm.minValue;
+		
+			currentTerm.getMinValueFormValue(true);
 			
+			if( !currentTerm.minValue ){
+				currentTerm.setMinBoundaryFormValue();
+				$('#<portlet:namespace/>minBoundary').prop('disabled', true);
+			}
+			else{
+				$('#<portlet:namespace/>minBoundary').prop('disabled', false);
+			}
+			
+			if( (!preValue !== !currentTerm.minValue) && dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
 		}
-		
-		console.log('Data Structure: ' + JSON.stringify( dataStructure, null, 4 ) );
-		console.log('Current Term: ' + JSON.stringify( currentTerm, null, 4 ) );
-		
+			break;
+		case '<portlet:namespace/>minBoundary':
+			currentTerm.getMinBoundaryFormValue(true);
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
+			break;
+		case '<portlet:namespace/>maxValue':
+			const preValue = currentTerm.maxValue;
+			
+			currentTerm.getMaxValueFormValue(true);
+			
+			if( !currentTerm.maxValue ){
+				currentTerm.setMaxBoundaryFormValue();
+				$('#<portlet:namespace/>maxBoundary').prop('disabled', true);
+			}
+			else{
+				$('#<portlet:namespace/>maxBoundary').prop('disabled', false);
+			}
+			
+			if( (!preValue !== !currentTerm.maxValue) && dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
+			break;
+		case '<portlet:namespace/>maxBoundary':
+			currentTerm.getMaxBoundaryFormValue(true);
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
+			break;
+		case '<portlet:namespace/>unit':
+			currentTerm.getUnitFormValue(true);
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
+			break;
+		case '<portlet:namespace/>uncertainty':
+			currentTerm.getUncertaintyFormValue(true);
+			if( dataStructure.previewed( currentTerm ) ){
+				dataStructure.refreshSelectedTermPreview();
+			}
+			break;
+		case '<portlet:namespace/>sweepable':
+			currentTerm.getSweepableFormValue(true);
+			break;
+		}
 	});
-	
-	let validateMandatoryFields = function(){
-		
-	}
 	
 	/*******************************************************************************
 	* Event handlers for buttons
@@ -488,11 +569,21 @@ $(document).ready(function(){
 	});
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
+		currentTerm = dataStructure.copyTerm( currentTerm );
+		dataStructure.setSelectedTerm( null );
 		
+		currentTerm.setAllFormValues();
+
+		$('#<portlet:namespace/>add').prop('disabled', false);
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
-		
+		if( dataStructure.previewd( currentTerm ) ){
+			$.alert('The current term is already previewed. Previewed term cannot be cleared. Delete the term and recreate.');
+		}
+		else{
+			currentTerm.setAllFormValues();
+		}
 	});
 
 	$('#<portlet:namespace/>btnImportTerm').click(function(){
@@ -523,7 +614,9 @@ $(document).ready(function(){
 		dataStructure.addTerm( currentTerm, true );
 		
 		$('#<portlet:namespace/>add').prop('disabled', true);
-		console.log( 'dataStrucyture: ', dataStructure );
+		
+		
+		console.log('currentTerm: ' + JSON.stringify( currentTerm, null, 4 ), currentTerm );
 	});
 	
 	

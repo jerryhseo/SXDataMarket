@@ -8,7 +8,7 @@
 				</aui:col>
 				<aui:col md="6">
 					<div class="vertical-align-bottom">
-						<aui:input name="lowerBoundary" label="include-boundary" type="checkbox"></aui:input>
+						<aui:input name="minBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
 					</div>
 				</aui:col>
 			</aui:row>
@@ -18,7 +18,7 @@
 				</aui:col>
 				<aui:col md="6">
 					<div class="vertical-align-bottom">
-						<aui:input name="upperBoundary" label="include-boundary" type="checkbox"></aui:input>
+						<aui:input name="maxBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
 					</div>
 				</aui:col>
 			</aui:row>

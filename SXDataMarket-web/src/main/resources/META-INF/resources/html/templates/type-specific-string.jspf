@@ -8,7 +8,8 @@
 							type="number"
 							id="minLength" 
 							name="minLength" 
-							label="min-length" 
+							label="min-length"
+							value="1"
 							helpMessage="min-length-help">
 					</aui:input>
 				</aui:col>
@@ -18,6 +19,7 @@
 							id="maxLength" 
 							name="maxLength" 
 							label="max-length" 
+							value="72"
 							helpMessage="string-max-length-help">
 					</aui:input>
 				</aui:col>
@@ -39,7 +41,8 @@
 							type="text"
 							id="validationRule" 
 							name="validationRule" 
-							label="validation-rule" 
+							label="validation-rule"
+							value="^[\w\s!@#\$%\^\&*\)\(+=._-]*$" 
 							helpMessage="string-validation-rule-help">
 					</aui:input>
 				</aui:col>

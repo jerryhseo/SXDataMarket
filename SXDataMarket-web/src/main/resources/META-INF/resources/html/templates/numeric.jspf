@@ -4,16 +4,16 @@
 		<td style="padding-right:0px;">
 			<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;"> {{minValue}} </div>
 		</td>
-			{{#minBoundaty}}
+			{{#minBoundary}}
 			<td style="padding-left:0; padding-right:0;">
 				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&le;</div>
 			</td>
-			{{/minBoundaty}}
-			{{^minBoundaty}}
+			{{/minBoundary}}
+			{{^minBoundary}}
 			<td style="padding-left:0; padding-right:0;">
 				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&lt;</div>
 			</td>
-			{{/minBoundaty}}
+			{{/minBoundary}}
 		{{/minValue}}
 		<td class="controlPreview" style="padding-right: 2px;">
 			{{#required}}
@@ -23,22 +23,30 @@
 				<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
 			{{/required}}
 		</td>
+		{{#uncertainty}}
+			<td style="padding-left:2px; padding-right:2px;">
+				<div style="margin-top:1rem;"><strong>&#xB1;</strong></div>
+			</td>
+			<td style="padding-left:2px;">
+				<aui:input type="text" id="{{uncertaintyValue}}" name="{{uncertaintyValue}}" label="uncertainty"></aui:input>
+			</td>
+		{{/uncertainty}}
 		{{#unit}}
 			<td style="padding-left: 2px;">
 				<div class="form-control" style="margin-top:1.5rem; padding-left: 0;padding-right: 0;">{{unit}}</div>
 			</td>
 		{{/unit}}
 		{{#maxValue}}
-			{{#maxBoundaty}}
+			{{#maxBoundary}}
 			<td style="padding-left:0px; padding-right:0px;">
 				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&le;</div>
 			</td>
-			{{/maxBoundaty}}
-			{{^maxBoundaty}}
+			{{/maxBoundary}}
+			{{^maxBoundary}}
 			<td style="padding-left:0px; padding-right:0px;">
 				<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;">&lt;</div>
 			</td>
-			{{/maxBoundaty}}
+			{{/maxBoundary}}
 		<td style="padding-left:0px;">
 			<div class="form-control" style="margin-top:1.5rem; padding-left:2px; padding-right:2px; border:none;"> {{maxValue}} </div>
 		</td>

@@ -3,18 +3,78 @@
 		<td class="controlPreview">
 			{{#required}}
 				{{#multipleLine}}
-					<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+					{{#defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
+					{{^defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" required="true"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
 				{{/multipleLine}}
 				{{^multipleLine}}
-					<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+					{{#defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
+					{{^defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" required="true"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
 				{{/multipleLine}}
 			{{/required}}
 			{{^required}}
 				{{#multipleLine}}
-					<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+					{{#defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
+					{{^defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="textarea" id="{{name}}" name="{{name}}" label="{{label}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
 				{{/multipleLine}}
 				{{^multipleLine}}
-					<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+					{{#defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
+					{{^defaultValue}}
+						{{#helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}"></aui:input>
+						{{/helpMessage}}
+						{{^helpMessage}}
+							<aui:input type="text" id="{{name}}" name="{{name}}" label="{{label}}"></aui:input>
+						{{/helpMessage}}
+					{{/defaultValue}}
 				{{/multipleLine}}
 			{{/required}}
 		</td>
