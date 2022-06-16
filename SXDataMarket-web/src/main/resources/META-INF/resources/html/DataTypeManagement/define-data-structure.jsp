@@ -1,3 +1,4 @@
+<%@page import="com.sx.icecap.datatype.constants.IcecapDataTypeConstants"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.sx.icecap.datatype.constants.IcecapDataTypeMVCCommands"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
@@ -11,10 +12,6 @@
 <%@page import="com.sx.icecap.datatype.constants.IcecapDataTypeWebKeys"%>
 <%@page import="com.sx.icecap.datatype.model.DataType"%>
 <%@ include file="../init.jsp" %>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
 
 <%
 	long dataTypeId = ParamUtil.getLong(renderRequest, IcecapDataTypeWebKeys.DATATYPE_ID, 0);
@@ -46,9 +43,17 @@
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:resourceURL>
 
-<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_TERM_ATTR %>" var="renderTermResourceCommandURL">
+<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_TERM %>" var="renderTermResourceCommandURL">
+	<portlet:param name="cmd" value="<%= IcecapDataTypeConstants.RENDER_TERM %>"/>
 </portlet:resourceURL>
 
+<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE %>" var="renderDataTypeResourceCommandURL">
+	<portlet:param name="cmd" value="<%= IcecapDataTypeConstants.RENDER_DATATYPE %>"/>
+</portlet:resourceURL>
+
+<portlet:renderURL var="templateRenderURL">
+	<portlet:param name="jspPath" value="/html/templates/list.jsp"></portlet:param>
+</portlet:renderURL>
 
 <aui:container cssClass="SXDataMarket-web" id="dataTypeDefiner">
 	<aui:row id="infoSection">
@@ -150,6 +155,7 @@
 	</aui:row>
 	<aui:row id="editSection" cssClass="border">
 		<aui:col md="5" id="termProperties" cssClass="bottom-margin">
+			<aui:container>
 			<aui:form action="" name="editTermForm" method="POST">
 				<aui:button-row>
 					<aui:button name="btnNewTerm" value="new-term" cssClass="left"></aui:button>
@@ -157,12 +163,13 @@
 					<aui:button name="btnClear" value="clear" cssClass="left"></aui:button>
 					<aui:button name="btnImportTerm" value="import-term" cssClass="right"></aui:button>
 				</aui:button-row>
-				
+				<aui:row>
+				<aui:col>
 				<aui:select name="termType" label="term-type" helpMessage="term-type-select-help">
-					<aui:option label="String" value="String"/>
-					<aui:option label="Numeric" value="Numeric" selected="true"/>
+					<aui:option label="String" value="String"  selected="true"/>
+					<aui:option label="Numeric" value="Numeric"/>
 					<aui:option label="Integer" value="Integer"/>
-					<aui:option label="List" value="List"/>
+					<aui:option label="List" value="List" selected="true"/>
 					<aui:option label="ListArray" value="ListArray"/>
 					<aui:option label="Matrix" value="Matrix"/>
 					<aui:option label="Boolean" value="Boolean"/>
@@ -194,22 +201,22 @@
 								required="true"
 								helpMessage="term-version-help">
 				</aui:input>
-				<aui:field-wrapper name="displayName" required="true" label="term-display-name" helpMessage="term-display-name-help">
+				<aui:field-wrapper name="termDisplayName" required="true" label="term-display-name" helpMessage="term-display-name-help">
 						<liferay-ui:input-localized 
-										name="displayName"
+										name="termDisplayName"
 										xml="">
 						</liferay-ui:input-localized>
 				</aui:field-wrapper>
-				<aui:field-wrapper name="definition" label="definition" helpMessage="definition-help">
+				<aui:field-wrapper name="termDefinition" label="definition" helpMessage="definition-help">
 						<liferay-ui:input-localized 
 										type="textarea"
-										name="definition"
+										name="termDefinition"
 										xml="">
 						</liferay-ui:input-localized>
 				</aui:field-wrapper>
-				<aui:field-wrapper name="tooltip" label="tooltip" helpMessage="term-tooltip-help">
+				<aui:field-wrapper name="termTooltip" label="tooltip" helpMessage="term-tooltip-help">
 						<liferay-ui:input-localized 
-										name="tooltip"
+										name="termTooltip"
 										xml="">
 						</liferay-ui:input-localized>
 				</aui:field-wrapper>
@@ -232,8 +239,13 @@
 							helpMessage="default-value-help">
 				</aui:input>
 	
-				<div id="<portlet:namespace/>typeSpecific"></div>
+				<hr class="content-horizontal-line">
+				
+				<%@include file="../templates/type-specific-attributes.jspf" %>
+				</aui:col>
+				</aui:row>
 			</aui:form>
+			</aui:container>
 		</aui:col>
 		<aui:col md="1" id="buttonSection" cssClass="vertical-center-side-border">
 			<aui:button id="add" value="add" icon="icon-double-angle-right" iconAlign="right"></aui:button>
@@ -242,8 +254,8 @@
 			<aui:form action="" name="previewForm" method="POST">
 				<!-- div id="templateString" cssClass="hide" -->
 				
-				<table class="table table-striped" id="<portlet:namespace/>preview">
-					<tbody>
+				<table class="table table-striped">
+					<tbody id="<portlet:namespace/>previewPanel">
 					</tbody>
 				</table>
 			</aui:form>
@@ -256,378 +268,9 @@
 
 </aui:container>
 
-<%@include file="../templates/type-specific-string.jspf" %>
-<%@include file="../templates/type-specific-numeric.jspf" %>
-
-<%@include file="../templates/string.jspf" %>
-<%@include file="../templates/numeric.jspf" %>
-
 <%@include file="../templates/term-type-selector.jspf" %>
 
-<script>
-$(document).ready(function(){
-	let SX = StationX(  '<portlet:namespace/>', 
-								'<%= defaultLocale.toString() %>',
-								'<%= locale.toString() %>',
-								<%= jsonLocales.toJSONString() %> );
-	
-	let getTypeSpecificSectionTitle = function( termType ){
-		switch( termType ){
-		case SX.TermTypes.STRING:
-			return '<liferay-ui:message key="string-attributes" />' ;
-		case SX.TermTypes.NUMERIC:
-			return '<liferay-ui:message key="numeric-attributes" />';
-		case SX.TermTypes.LIST:
-			return '<liferay-ui:message key="list-attributes" />';
-		}
-	};
-	
-	let dataStructure = SX.newDataStructure( 'preview' );
-	let hasDataStructure = <%= hasDataStructure %>;
+<%@include file="script-bottom.jspf" %>
 
-	if( hasDataStructure ){
-		
-	}
-	else{
-		
-	}
-	
-	let termType = $('#<portlet:namespace/>termType').val();
-	let currentTerm = dataStructure.createTerm( termType );
-	
-	currentTerm.renderAttributeSection( 'typeSpecific',  getTypeSpecificSectionTitle( currentTerm.termType ) );
-	
-	$('#<portlet:namespace/>dataTypeDefiner').change(function(eventObj){
-		switch( eventObj.originalEvent.target.id ){
-		case '<portlet:namespace/>termDelimiter':
-			dataStructure.getTermDelimiterFormValue( true );
-			break;
-		case '<portlet:namespace/>termDelimiterPosition':
-			dataStructure.getTermDelimiterPositionFormValue( true );
-			break;
-		case '<portlet:namespace/>termValueDelimiter':
-			dataStructure.getTermValueDelimiterFormValue( true );
-			break;
-		case '<portlet:namespace/>matrixBracketType':
-			dataStructure.getMatrixBracketTypeFormValue( true );
-			break;
-		case '<portlet:namespace/>matrixElementDelimiter':
-			dataStructure.getMatrixElementDelimiterFormValue( true );
-			break;
-		case '<portlet:namespace/>commentChar':
-			dataStructure.getCommentCharFormValue( true );
-			break;
-		case '<portlet:namespace/>termType':
-			let selectedTermType = currentTerm.getTermTypeFormValue();
-			
-			if( selectedTermType === currentTerm.termType ){
-				// Do nothing
-				break;
-			}
-			
-			if( dataStructure.exist( currentTerm.termName ) ){
-				$.alert({
-					title: '<liferay-ui:message key="term-type-change-alert"/>',
-					content: 'how-to-term-type-change'
-				});
-				
-				currentTerm.setTermTypeFormValue();
-			}
-			else{
-				currentTerm = dataStructure.createTerm( selectedTermType );
-				currentTerm.renderAttributeSection( 'typeSpecific', getTypeSpecificSectionTitle(currentTerm.termType) );
-			}
-			break;
-		case '<portlet:namespace/>termName':
-			if( dataStructure.previewed( currentTerm ) ){
-				// It means the current term is one of the data structure and previewed on the preview panel.
-				// Therefore, we must confirm that the term's name be changed and change preview.
-				$.confirm({
-					title: '<liferay-ui:message key="select-term-type" />',
-					content: '<liferay-ui:message key="this-term-is-previewed-are-you-sure-to-change-the-name-of-the-term" />',
-					type: 'orange',
-					typeAnimated: true,
-					buttons:{
-						ok: {
-							text: 'OK',
-							btnClass: 'btn-blue',
-							action: function(){
-								let changedName = currentTerm.getTermNameFormValue();
-								if( dataStructure.exist( changedName ) ){
-									$.alert( changedName + 'already exist. Should be changed another name.' );
-									currentTerm.setTermNameFormValue();
-								}
-								else{
-									if( currentTerm.validateNameExpression( changedName ) === true ){
-										currentTerm.termName = changedName;
-										
-										dataStructure.refreshSelectedTermPreview();
-									}
-									else{
-										$.alert( 'Term Name[' + changedName +'] is unvalid. Try another one.');
-										currentTerm.setTermNameFormValue();
-									}
-								} 
-							}
-						},
-						cancel: function(){
-							currentTerm.setTermNameFormValue();
-						}
-					},
-					draggable: true
-				}); 
-			}
-			else{
-				currentTerm.getTermNameFormValue( true );
-			}
-		
-			break;
-		case '<portlet:namespace/>termVersion':
-			const changedVersion = currentTerm.getTermVersionFormValue();
-		
-			let validated;
-			if( dataStructure.previewed( currentTerm ) ){
-				validated = Term.validateTermVersion( changedVersion, currentTerm.termVersion );
-			}
-			else{
-				validated = SX.Term.validateTermVersion( changedVersion );
-			}
-			
-			if( validated === true ){
-				currentTerm.termVersion = changedVersion;
-			}
-			else{
-				$.alert( changedVersion + ' ' + validated );
-				currentTerm.setTermVersionFormValue();
-			} 
-			
-			break;
-		case '<portlet:namespace/>displayName':
-			currentTerm.getDisplayNameFormValue(true);
-		
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>definition':
-			currentTerm.getDefinitionFormValue(true);
-			break;
-		case '<portlet:namespace/>tooltip':
-			currentTerm.getTooltipFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>synonyms':
-			currentTerm.getSynonymsFormValue(true);
-			break;
-		case '<portlet:namespace/>mandatory':
-			currentTerm.getMandatoryFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>value':
-			currentTerm.getValueFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>minLength':
-			const changedValue = Number( currentTerm.getMinLengthFormValue() );
-			console.log( 'Changed number: '+changedValue );
-			if( isNaN( changedValue ) || changedValue <= 0){
-				$.alert('Minimum length should be an interger larger than 0.');
-				currentTerm.setMinLengthFormValue()
-			}
-			else{
-				currentTerm.minLength = changedValue;
-				if( dataStructure.previewed( currentTerm ) ){
-					dataStructure.refreshSelectedTermPreview();
-				}
-			}
-			
-			break;
-		case '<portlet:namespace/>maxLength':
-			const minLength = currentTerm.getMinLengthFormValue();
-			const maxLength = currentTerm.getMaxLengthFormValue();
-			if( maxLength < minLength ){
-				$.alert('Maximum length should be larger than minimum length.');
-				currentTerm.setMaxLengthFormValue();
-			}
-			else{
-				currentTerm.getMaxLengthFormValue(true);
-				if( dataStructure.previewed( currentTerm ) ){
-					dataStructure.refreshSelectedTermPreview();
-				}
-			}
-			break;
-		case '<portlet:namespace/>multipleLine':
-			currentTerm.getMultipleLineFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>validationRule':
-			currentTerm.getValidationRuleFormValue(true);
-			break;
-		case '<portlet:namespace/>minValue': {
-			const preValue = currentTerm.minValue;
-		
-			currentTerm.getMinValueFormValue(true);
-			
-			if( !currentTerm.minValue ){
-				currentTerm.setMinBoundaryFormValue();
-				$('#<portlet:namespace/>minBoundary').prop('disabled', true);
-			}
-			else{
-				$('#<portlet:namespace/>minBoundary').prop('disabled', false);
-			}
-			
-			if( (!preValue !== !currentTerm.minValue) && dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-		}
-			break;
-		case '<portlet:namespace/>minBoundary':
-			currentTerm.getMinBoundaryFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>maxValue':
-			const preValue = currentTerm.maxValue;
-			
-			currentTerm.getMaxValueFormValue(true);
-			
-			if( !currentTerm.maxValue ){
-				currentTerm.setMaxBoundaryFormValue();
-				$('#<portlet:namespace/>maxBoundary').prop('disabled', true);
-			}
-			else{
-				$('#<portlet:namespace/>maxBoundary').prop('disabled', false);
-			}
-			
-			if( (!preValue !== !currentTerm.maxValue) && dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>maxBoundary':
-			currentTerm.getMaxBoundaryFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>unit':
-			currentTerm.getUnitFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>uncertainty':
-			currentTerm.getUncertaintyFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
-			break;
-		case '<portlet:namespace/>sweepable':
-			currentTerm.getSweepableFormValue(true);
-			break;
-		}
-	});
-	
-	/*******************************************************************************
-	* Event handlers for buttons
-	*******************************************************************************/
-	$('#<portlet:namespace/>btnNewTerm').click(function(){
-		$.confirm({
-			title: '<liferay-ui:message key="select-term-type" />',
-			content: Mustache.render( $('#<portlet:namespace/>termTypeSelectorDlg' ).html(), {} ),
-			type: 'orange',
-			typeAnimated: true,
-			buttons:{
-				ok: {
-					text: 'OK',
-					btnClass: 'btn-blue',
-					action: function(){
-						currentTerm = dataStructure.createTerm( $('#<portlet:namespace/>dlgTermType').val() );
-						$('#<portlet:namespace/>termType').val( currentTerm.termType );
-						currentTerm.renderAttributeSection( 'typeSpecific', getTypeSpecificSectionTitle(currentTerm.termType) );
-						currentTerm.setAllFormValues();
-						
-						dataStructure.setSelectedTerm( null );
-						
-						$('#<portlet:namespace/>add').prop('disabled', false);
-					}
-				},
-				cancel: function(){
-					
-				}
-			},
-			draggable: true
-		});
-	});
 
-	$('#<portlet:namespace/>btnCopyTerm').click(function(){
-		currentTerm = dataStructure.copyTerm( currentTerm );
-		dataStructure.setSelectedTerm( null );
-		
-		currentTerm.setAllFormValues();
-
-		$('#<portlet:namespace/>add').prop('disabled', false);
-	});
-	
-	$('#<portlet:namespace/>btnClear').click(function(){
-		if( dataStructure.previewd( currentTerm ) ){
-			$.alert('The current term is already previewed. Previewed term cannot be cleared. Delete the term and recreate.');
-		}
-		else{
-			currentTerm.setAllFormValues();
-		}
-	});
-
-	$('#<portlet:namespace/>btnImportTerm').click(function(){
-		
-	});
-	
-	$('#<portlet:namespace/>add').click(function(){
-		/*
-		$.ajax({
-			url: '<%= renderTermResourceCommandURL.toString() %>',
-			method: 'post',
-			dataType: 'text',
-			data: {
-				<portlet:namespace/>termType: currentTerm.termType,
-				<portlet:namespace/>mandatory: currentTerm.mandatory,
-				<portlet:namespace/>displayName: currentTerm.displayName.localizedMap['<%= locale.toString() %>'],
-				<portlet:namespace/>tooltip: currentTerm.tooltip.localizedMap['<%= locale.toString() %>']
-			},
-			success: function( result ){
-				console.log( result );
-			},
-			error: function(){
-				console.log('error');
-			}
-		});
-		*/
-		
-		dataStructure.addTerm( currentTerm, true );
-		
-		$('#<portlet:namespace/>add').prop('disabled', true);
-		
-		
-		console.log('currentTerm: ' + JSON.stringify( currentTerm, null, 4 ), currentTerm );
-	});
-	
-	
-	/*******************************************************************************
-	* Event handlers from the preview section
-	*******************************************************************************/
-	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(eventData){
-		currentTerm = eventData.selectedTerm;
-	});
-	
-});
-</script>
 

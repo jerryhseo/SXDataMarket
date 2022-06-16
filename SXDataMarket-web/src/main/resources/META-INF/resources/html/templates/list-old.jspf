@@ -1,0 +1,151 @@
+<script id="templateString" type="text/template">
+	<tr>
+		<td class="controlPreview">
+			{{#required}}
+				{{#helpMessage}}
+					{{#select}}
+						{{#defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+					{{/select}}
+					{{#radio}}
+						{{#defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+					{{/radio}}
+				{{/helpMessage}}
+				{{^helpMessage}}
+					{{#select}}
+						{{#defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" required="true">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+					{{/select}}
+					{{#radio}}
+						{{#defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" required="true">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" required="true">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+					{{/radio}}
+				{{/helpMessage}}
+			{{/required}}
+			{{^required}}
+				{{#helpMessage}}
+					{{#select}}
+						{{#defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+					{{/select}}
+					{{#radio}}
+						{{#defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" helpMessage="{{helpMessage}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+					{{/radio}}
+				{{/helpMessage}}
+				{{^helpMessage}}
+					{{#select}}
+						{{#defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" value="{{defaultValue}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}">
+								{{#options}}
+									<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:input>
+						{{/defaultValue}}
+					{{/select}}
+					{{#radio}}
+						{{#defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+						{{^defaultValue}}
+							<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}">
+								{{#options}}
+									<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:option>
+								{{/options}}
+							</aui:fieldset>
+						{{/defaultValue}}
+					{{/radio}}
+				{{/helpMessage}}
+			{{/required}}
+		</td>
+		<td>
+			<button type="button" class="btn btn-default">
+				<i class="icon-remove" />
+			</button>
+		</td>
+	</tr>
+</script>

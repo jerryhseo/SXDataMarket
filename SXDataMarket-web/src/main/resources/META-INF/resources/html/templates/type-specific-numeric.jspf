@@ -1,44 +1,44 @@
-<script id="<portlet:namespace/>templateNumericAttrs" type="text/template">
-<aui:container>
-	<aui:fieldset-group markupView="lexicon" >
-		<aui:fieldset label="{{ fieldSetLabel }}">
-			<aui:row>
-				<aui:col md="6">
-					<aui:input name="minValue" label="min-value" type="number" helpMessage="min-value-help"></aui:input>
-				</aui:col>
-				<aui:col md="6">
-					<div class="vertical-align-bottom">
-						<aui:input name="minBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
-					</div>
-				</aui:col>
-			</aui:row>
-			<aui:row>
-				<aui:col md="6">
-					<aui:input name="maxValue" label="max-value" type="number" helpMessage="max-value-help"></aui:input>
-				</aui:col>
-				<aui:col md="6">
-					<div class="vertical-align-bottom">
-						<aui:input name="maxBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
-					</div>
-				</aui:col>
-			</aui:row>
-			<aui:row>
-				<aui:col md="8">
-					<aui:input name="unit" label="unit" helpMessage="numeric-unit-help"></aui:input>
-				</aui:col>
-				<aui:col md="4">
-					<aui:input name="unitPreview"disabled="true"></aui:input>
-				</aui:col>
-			</aui:row>
-			<aui:row>
-				<aui:col md="6">
-					<aui:input name="uncertainty" label="allow-uncertainty" type="checkbox" helpMessage="numeric-allow-uncertainty-help"></aui:input>
-				</aui:col>
-				<aui:col md="6">
-					<aui:input name="sweepable" label="sweepable" type="checkbox" helpMessage="numeric-sweepable-help"></aui:input>
-				</aui:col>
-			</aui:row>
-		</aui:fieldset>
-	</aui:fieldset-group>
-</aui:container>
-</script>
+<div id="<portlet:namespace/>numericAttributes" class="type-specific-attrs hide">
+	<aui:container>
+		<aui:fieldset-group markupView="lexicon" >
+			<aui:fieldset label="{{ fieldSetLabel }}">
+				<aui:row>
+					<aui:col md="6">
+						<aui:input name="minValue" label="min-value" type="number" helpMessage="min-value-help"></aui:input>
+					</aui:col>
+					<aui:col md="6">
+						<div class="vertical-align-bottom">
+							<aui:input name="minBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
+						</div>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col md="6">
+						<aui:input name="maxValue" label="max-value" type="number" helpMessage="max-value-help"></aui:input>
+					</aui:col>
+					<aui:col md="6">
+						<div class="vertical-align-bottom">
+							<aui:input name="maxBoundary" label="include-boundary" type="checkbox" disabled="true"></aui:input>
+						</div>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col md="8">
+						<aui:input name="unit" label="unit" helpMessage="numeric-unit-help"></aui:input>
+					</aui:col>
+					<aui:col md="4">
+						<aui:input name="unitPreview"disabled="true"></aui:input>
+					</aui:col>
+				</aui:row>
+				<aui:row>
+					<aui:col md="6">
+						<aui:input name="uncertainty" label="allow-uncertainty" type="checkbox" helpMessage="numeric-allow-uncertainty-help"></aui:input>
+					</aui:col>
+					<aui:col md="6">
+						<aui:input name="sweepable" label="sweepable" type="checkbox" helpMessage="numeric-sweepable-help"></aui:input>
+					</aui:col>
+				</aui:row>
+			</aui:fieldset>
+		</aui:fieldset-group>
+	</aui:container>
+</div>

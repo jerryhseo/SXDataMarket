@@ -20,7 +20,7 @@
 	}
 	
 	.show-border{ 
-		border: solid #bbb 1px;
+		border: solid #ddd 1px;
 	}
 
 	.lfr-ddm-field-group {
@@ -30,6 +30,12 @@
     .title-horizontal-line {
         margin-top: 0.5rem;
         border-top: 3px solid #bbb;
+    }
+
+	.content-horizontal-line {
+        margin-top: 1rem;
+		margin-bottom: 1rem;
+        border-top: 3px solid #ddd;
     }
 
     .right{
@@ -67,11 +73,8 @@
 		margin-bottom: 15px;
 	}
 
-	.controlPreview{
-		width: 90%;
-	}
-
 	.highlight-border{
 		border: 3px solid darkcyan;
 	}
+
 }

@@ -1,0 +1,48 @@
+<div id="<portlet:namespace/>listAttributes" class="type-specific-attrs hide">
+	<aui:fieldset-group markupView="lexicon" >
+		<hr class="title-horizontal-line">
+			<aui:fieldset-group markupView="lexicon" >
+				<aui:fieldset label="display-style"  helpMessage="list-display-style-help">
+					<div style="display:inline-block; margin-left:10px; margin-right:10px;">
+						<aui:input type="radio" name="displayType" label="select-box" value="select" checked="true"></aui:input>
+					</div>
+					<div style="display:inline-block; margin-left:10px; margin-right:10px;">
+						<aui:input type="radio" name="displayType" label="radio" value="radio"></aui:input>
+					</div>
+				</aui:fieldset> 
+			</aui:fieldset-group>
+			<aui:fieldset-group markupView="lexicon" >
+				<aui:fieldset label="list-item-management"  helpMessage="list-item-management-help">
+					<table class="show-border">
+						<tbody id="<portlet:namespace/>listItemsPreview">
+						</tbody>
+					</table>
+					
+					<aui:field-wrapper name="itemDisplayName" label="item-display-name" required="true">
+						<liferay-ui:input-localized id="itemDisplayName" name="itemDisplayName" xml=""></liferay-ui:input-localized>
+					</aui:field-wrapper> 
+					<aui:input id="itemValue" name="itemValue" label="item-value" required="true"></aui:input> 
+					<aui:input type="checkbox" id="itemValue" name="itemValue" label="default"></aui:input>
+					<aui:button-row>
+						<aui:button id="btnNewItem" value="new" cssClass="left"></aui:button>
+						<aui:button id="btnAddItem" value="add" cssClass="right"></aui:button>
+					</aui:button-row> 
+				</aui:fieldset> 
+			</aui:fieldset-group>
+			
+	</aui:fieldset-group>
+</div>
+
+<script id="<portlet:namespace/>templateListItemRow" type="text/template">
+	<tr>
+		<td style="width:40%;">{{displayName}}</td>
+		<td style="width:40%;">{{termName}}</td>
+		<td style="width:10%;">{{termVersion}}</td>
+		<td>
+			<button type="button" class="btn btn-default">
+				<i class="icon-remove" />
+			</button>
+		</td>
+	</tr>
+</script>
+

@@ -1,6 +1,12 @@
 <script id="templateString" type="text/template">
 	<tr>
-		<td class="controlPreview">
+		<td style="padding:0; margin:0;">
+			{{#preview}}
+			<table style="width:100%;">
+				<tbody>
+				<tr style="width:100%;">
+				<td style="padding-right: 2px; width:90%;">
+			{{/preview}}
 			{{#required}}
 				{{#multipleLine}}
 					{{#defaultValue}}
@@ -78,10 +84,16 @@
 				{{/multipleLine}}
 			{{/required}}
 		</td>
-		<td>
+		{{#preview}}
+		<td style="padding-right:0;">
 			<button type="button" class="btn btn-default">
 				<i class="icon-remove" />
 			</button>
 		</td>
+				</tr>
+				</tbody>
+			</table>
+		</td>
+		{{/preview}}
 	</tr>
 </script>

@@ -1,0 +1,27 @@
+<script id="templateList" type="text/template">
+	<tr>
+		<td class="controlPreview">
+			{{#select}}
+				<aui:input type="select" id="{{name}}" name="{{name}}" label="{{label}}" required="true" value="{{defaultValue}}" helpMessage="{{helpMessage}}">
+					{{#options}}
+						<aui:option label="{{optionLabel}}" value="optionValue"></aui:option>
+					{{/options}}
+				</aui:input>
+			{{/select}}
+			{{#radio}}
+				<aui:fieldset id="{{name}}" name="{{name}}" label="{{label}}" required="true" helpMessage="{{helpMessage}}">
+					{{#options}}
+						<aui:input type="radio" id="{{optionName}}" name="{{optionName}}" label="{{optionLabel}}" value="optionValue"></aui:input>
+					{{/options}}
+				</aui:fieldset>
+			{{/radio}}
+		</td>
+		{{#preview}}
+		<td>
+			<button type="button" class="btn btn-default">
+				<i class="icon-remove" />
+			</button>
+		</td>
+		{{/preview}}
+	</tr>
+</script>

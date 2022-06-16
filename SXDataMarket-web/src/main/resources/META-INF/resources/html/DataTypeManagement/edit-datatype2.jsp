@@ -124,7 +124,6 @@
 		<aui:row>
 			<aui:col>
 				<aui:field-wrapper
-						name="description"
 						label="description"
 						helpMessage="datatype-description-help">
 					<liferay-ui:input-localized 
@@ -138,7 +137,6 @@
 		<aui:row>
 			<aui:col>
 				<aui:field-wrapper
-						name="displayName"
 						label="display-name"
 						required="true"
 						helpMessage="display-name-help">
@@ -152,7 +150,6 @@
 		<aui:row>
 			<aui:col>
 				<aui:field-wrapper
-						name="tooltip"
 						label="tooltip"
 						helpMessage="datatype-tooltip-help">
 					<liferay-ui:input-localized 
