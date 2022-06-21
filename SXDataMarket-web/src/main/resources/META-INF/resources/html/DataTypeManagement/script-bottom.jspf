@@ -317,6 +317,14 @@ $(document).ready(function(){
 	
 	$('input[name="<portlet:namespace/>listDisplayStyle"]').change(function(eventObj){
 		currentTerm.getDisplayStyleFormValue(true);
+		
+		if( currentTerm.displayStyle === SX.SXConstants.DISPLAY_STYLE_CHECK ){
+			currentTerm.configureMultipleSeletionMode( true );
+		}
+		else{
+			currentTerm.configureMultipleSeletionMode( false );
+		}
+		
 		if( dataStructure.previewed( currentTerm ) ){
 			dataStructure.refreshSelectedTermPreview();
 		}
@@ -384,10 +392,9 @@ $(document).ready(function(){
 			return;
 		}
 		
-		dataStructure.terms = dataStructure.terms.filter( function( term, index, ary ){
-			if( term === eventData.deletedTerm )	return false;
-			else	return true;
-		});
+		dataStructure.removeTerm( eventData.deletedTerm.termName );
+		
+		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 	});
 	
 	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(eventData){
@@ -412,6 +419,8 @@ $(document).ready(function(){
 		let removedOption = eventData.removedOption;
 
 		currentTerm.removeOption( removedOption.value );
+		
+		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 	});
 
 	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_SELECTED, function( eventData ){
@@ -547,6 +556,10 @@ $(document).ready(function(){
 		}
 		
 		console.log('currentTerm: ' + JSON.stringify( currentTerm, null, 4 ), currentTerm );
+	});
+	
+	$('#<portlet:namespace/>btnRefresh').click(function(event){
+		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
 	});
 });
 </script>

@@ -43,9 +43,6 @@
 							</select>
 							<script>
 								$('#${controlName}').change(function(event){
-									let msg = 'The value of the select, ${label}, is ' + $(this).val();
-									$.alert( msg );
-									
 									let eventData = {
 										sourcePortlet: '${namespace}',
 										targetPortlet: '${namespace}',
@@ -99,8 +96,21 @@
 												</div>
 											</div>
 											<script>
-												$('#${controlName}_${option?counter}').change(function(event){
-													$.alert("The value of the radio ${label} is " + $(this).val());
+												$('#${controlName}_${option?counter}').click(function(event){
+													let selectedValue = $(this).val();
+													$.alert( selectedValue );
+													
+													let eventData = {
+														sourcePortlet: '${namespace}',
+														targetPortlet: '${namespace}',
+														termName: '${termName}',
+														optionValue: $(this).val()
+													};
+													
+													Liferay.fire(
+														'DATATYPE_FORM_UI_SHOW_TERMS',
+														eventData
+													);
 												});
 											</script>
 		</#list>

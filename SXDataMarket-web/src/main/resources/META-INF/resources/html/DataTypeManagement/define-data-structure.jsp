@@ -170,7 +170,6 @@
 					<aui:option label="Numeric" value="Numeric"/>
 					<aui:option label="Integer" value="Integer"/>
 					<aui:option label="List" value="List" selected="true"/>
-					<aui:option label="ListArray" value="ListArray"/>
 					<aui:option label="Matrix" value="Matrix"/>
 					<aui:option label="Boolean" value="Boolean"/>
 					<aui:option label="Array" value="Array"/>
@@ -253,6 +252,11 @@
 		<aui:col md="6" id="previewSection">
 			<aui:form action="" name="previewForm" method="POST">
 				<!-- div id="templateString" cssClass="hide" -->
+				<aui:button-row>
+					<aui:button id="btnRefresh" value="refresh"></aui:button>
+					<aui:button id="btnShowSDE" value="structured-datatype-editor"></aui:button>
+				</aui:button-row>
+				<hr class="content-horizontal-line">
 				
 				<table class="table table-striped">
 					<tbody id="<portlet:namespace/>previewPanel">

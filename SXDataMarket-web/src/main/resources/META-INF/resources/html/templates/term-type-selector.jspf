@@ -4,7 +4,6 @@
 		<aui:option label="Numeric" value="Numeric"/>
 		<aui:option label="Integer" value="Integer"/>
 		<aui:option label="List" value="List"/>
-		<aui:option label="ListArray" value="ListArray"/>
 		<aui:option label="Matrix" value="Matrix"/>
 		<aui:option label="Boolean" value="Boolean"/>
 		<aui:option label="Array" value="Array"/>
