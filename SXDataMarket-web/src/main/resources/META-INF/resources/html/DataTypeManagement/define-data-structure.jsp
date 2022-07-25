@@ -270,8 +270,8 @@
 		</aui:col>
 	</aui:row>
 	<aui:button-row>
-		<aui:button id="save" value="save"></aui:button>
-		<aui:button id="saveAndViewDataTypeList" value="save-and-view-datatype-list"></aui:button>
+		<aui:button id="btnSave" value="save"></aui:button>
+		<aui:button id="btnSaveAndViewDataTypeList" value="save-and-view-datatype-list"></aui:button>
 	</aui:button-row>
 
 </aui:container>

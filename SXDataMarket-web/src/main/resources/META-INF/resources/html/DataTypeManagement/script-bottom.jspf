@@ -39,12 +39,12 @@ $(document).ready(function(){
 		currentTerm.setAllFormValues();
 		
 		if( currentTerm.isRendered() ){
-			dataStructure.disable(['btnAdd', 'btnClear', 'btnNewTerm', 'termType'], true);
-			dataStructure.disable(['btnUp', 'btnDown'], false);
+			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], true);
+			dataStructure.disable(['btnUp', 'btnDown', 'btnNewTerm'], false);
 		}
 		else{
-			dataStructure.disable(['btnAdd', 'btnClear', 'btnNewTerm', 'termType'], false);
-			dataStructure.disable(['btnUp', 'btnDown'], true);
+			dataStructure.disable(['btnAdd', 'btnClear', 'termType'], false);
+			dataStructure.disable(['btnUp', 'btnDown', 'btnNewTerm'], true);
 		}
 		
 		if( currentTerm.isGroupTerm() ){
@@ -672,6 +672,13 @@ $(document).ready(function(){
 		dataStructure.moveDownTerm( currentTerm );
 	});
 	
+	$('#<portlet:namespace/>btnSave').click(function(event){
+		if( currentTerm.validate() === false ){
+			return;
+		}
+		
+		console.log('')
+	});
 });
 </aui:script>
 
