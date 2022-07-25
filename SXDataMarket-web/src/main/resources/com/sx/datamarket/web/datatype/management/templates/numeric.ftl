@@ -51,6 +51,21 @@
 										name="${controlName}" 
 										<#if value?has_content>value="${value}"</#if> 
 										aria-required="true">
+								<script>
+									$('#${controlName}').change(function(event){
+										let eventData = {
+											sourcePortlet: NAMESPACE,
+											targetPortlet: NAMESPACE,
+											formControl: '${controlName}',
+											changedValue: $(this).val()  
+										};
+									});
+									
+									Liferay.fire(
+										SXSXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED,
+										eventData
+									);
+								</script>
 							</div>
 						</td>
 <#if uncertainty == true >
@@ -61,10 +76,25 @@
 							<div class="form-group input-text-wrapper" style="margin-top:1.5rem;">
 								<input 
 										class="field form-control" 
-										id="${controlName}" 
-										name="${controlName}" 
+										id="${controlName}_uncertainty" 
+										name="${controlName}_uncertainty" 
 										<#if uncertaintyValue?has_content>value="${uncertaintyValue}"</#if> 
 										aria-required="true">
+								<script>
+									$('#${controlName}').change(function(event){
+										let eventData = {
+											sourcePortlet: NAMESPACE,
+											targetPortlet: NAMESPACE,
+											formControl: '${controlName}',
+											changedValue: $(this).val()  
+										};
+									});
+									
+									Liferay.fire(
+										SXSXIcecapEvents.DATATYPE_SDE_UNCERTAINTY_CHANGED,
+										eventData
+									);
+								</script>
 							</div>
 						</td>
 </#if>

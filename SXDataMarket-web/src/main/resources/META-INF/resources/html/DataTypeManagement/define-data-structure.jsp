@@ -51,11 +51,13 @@
 	<portlet:param name="cmd" value="<%= IcecapDataTypeConstants.RENDER_DATATYPE %>"/>
 </portlet:resourceURL>
 
-<portlet:renderURL var="templateRenderURL">
-	<portlet:param name="jspPath" value="/html/templates/list.jsp"></portlet:param>
+<portlet:renderURL var="templateEditListOptionDlg">
+	<portlet:param name="jspPath" value="/html/templates/edit-list-option.jsp"></portlet:param>
 </portlet:renderURL>
 
+<aui:form action="" name="defineFm">
 <aui:container cssClass="SXDataMarket-web" id="dataTypeDefiner">
+
 	<aui:row id="infoSection">
 		<aui:col md="3" id="nameCol">
 			<aui:input 
@@ -156,7 +158,6 @@
 	<aui:row id="editSection" cssClass="border">
 		<aui:col md="5" id="termProperties" cssClass="bottom-margin">
 			<aui:container>
-			<aui:form action="" name="editTermForm" method="POST">
 				<aui:button-row>
 					<aui:button name="btnNewTerm" value="new-term" cssClass="left"></aui:button>
 					<aui:button name="btnCopyTerm" value="copy-term" cssClass="left"></aui:button>
@@ -165,13 +166,14 @@
 				</aui:button-row>
 				<aui:row>
 				<aui:col>
+				<div id="<portlet:namespace/>termTypeSelector">
 				<aui:select name="termType" label="term-type" helpMessage="term-type-select-help">
-					<aui:option label="String" value="String"  selected="true"/>
+					<aui:option label="String" value="String"/>
 					<aui:option label="Numeric" value="Numeric"/>
 					<aui:option label="Integer" value="Integer"/>
-					<aui:option label="List" value="List" selected="true"/>
+					<aui:option label="List" value="List"/>
 					<aui:option label="Matrix" value="Matrix"/>
-					<aui:option label="Boolean" value="Boolean"/>
+					<aui:option label="Boolean" value="Boolean" selected="true"/>
 					<aui:option label="Array" value="Array"/>
 					<aui:option label="Address" value="Address"/>
 					<aui:option label="Phone" value="Phone"/>
@@ -186,6 +188,7 @@
 					<aui:option label="DataLink" value="DataLink"/>
 					<aui:option label="DataLinkArray" value="DataLinkArray"/>
 				</aui:select>
+				</div>
 				
 				<aui:input  
 								name="termName" 
@@ -243,14 +246,16 @@
 				<%@include file="../templates/type-specific-attributes.jspf" %>
 				</aui:col>
 				</aui:row>
-			</aui:form>
 			</aui:container>
 		</aui:col>
 		<aui:col md="1" id="buttonSection" cssClass="vertical-center-side-border">
-			<aui:button id="add" value="add" icon="icon-double-angle-right" iconAlign="right"></aui:button>
+			<div style="display:block;">
+				<aui:button id="btnUp" value="up" icon="icon-arrow-up" iconAlign="left" cssClass="center-button"></aui:button>
+				<aui:button id="btnAdd" value="add" icon="icon-double-angle-right" iconAlign="right" cssClass="center-button"></aui:button>
+				<aui:button id="btnDown" value="down" icon="icon-arrow-down" iconAlign="right" cssClass="center-button"></aui:button>
+			</div>
 		</aui:col>
 		<aui:col md="6" id="previewSection">
-			<aui:form action="" name="previewForm" method="POST">
 				<!-- div id="templateString" cssClass="hide" -->
 				<aui:button-row>
 					<aui:button id="btnRefresh" value="refresh"></aui:button>
@@ -262,7 +267,6 @@
 					<tbody id="<portlet:namespace/>previewPanel">
 					</tbody>
 				</table>
-			</aui:form>
 		</aui:col>
 	</aui:row>
 	<aui:button-row>
@@ -271,10 +275,8 @@
 	</aui:button-row>
 
 </aui:container>
-
-<%@include file="../templates/term-type-selector.jspf" %>
+</aui:form>
 
 <%@include file="script-bottom.jspf" %>
-
 
 

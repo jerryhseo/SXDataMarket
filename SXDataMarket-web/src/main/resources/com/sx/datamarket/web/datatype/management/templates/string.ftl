@@ -50,7 +50,24 @@
 									<#if placeHolder?has_content>placeholder="${placeHolder}"</#if> 
 									<#if value?has_content>value="${value}"</#if> 
 									aria-required="true">
+							
 </#if>
+							<script>
+								$('#${controlName}').change(function(event){
+									let eventData = {
+										sourcePortlet: NAMESPACE,
+										targetPortlet: NAMESPACE,
+										formControl: '${controlName}',
+										changedValue: $(this).val()  
+									};
+									
+									Liferay.fire(
+										SXSXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED,
+										eventData
+									);
+								});
+								
+							</script>
 						</div>
 <#if renderType == PREVIEW>
 					</td>

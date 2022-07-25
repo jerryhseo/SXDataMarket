@@ -1,22 +1,44 @@
-<script>
+<aui:script use="aui-base, liferay-form, liferay-menu">
+var _ = AUI._;
+
 $(document).ready(function(){
 	
 	let SX = StationX(  '<portlet:namespace/>', 
 								'<%= defaultLocale.toString() %>',
 								'<%= locale.toString() %>',
 								<%= jsonLocales.toJSONString() %> );
+								
+	/**************************************************************
+    * 	When a liferay-ui:input-localized tag is included in the dialog template section, then 
+    *  Liferay.Menu.register() function makes critical trouble so that localized functions donot 
+    *  work.
+    *				
+	let $listOptionManagementDlg = $('#<portlet:namespace/>manageListOptions')
+				.dialog({
+					autoOpen: true,
+					width: 400,
+					modal: true,
+					title: '<liferay-ui:message key="edit-list-option"/>',
+					buttons: {
+						'<liferay-ui:message key="add-option"/>': function(){
+						},
+						'<liferay-ui:message key="cancel"/>': function(){
+						}
+					}
+				});
+	****************************************************************/
 	
 	SX.DataStructure.FORM_RENDER_URL =  '<%= renderTermResourceCommandURL.toString() %>';
 	let dataStructure = SX.newDataStructure();
 	
 	let currentTerm = null;
 	
-	let setCurrentTerm = function( term, previewed ){
+	let setCurrentTerm = function( term ){
 		currentTerm = term;
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
-		if( previewed ){
+		if( dataStructure.highlightTerm( currentTerm ) ){
 			dataStructure.disable(['add', 'btnClear', 'termType'], true);
 			/*
 			$('#<portlet:namespace/>add').prop('disabled', true);
@@ -24,7 +46,6 @@ $(document).ready(function(){
 			*/
 		}
 		else{
-			dataStructure.setSelectedTerm( null );
 			dataStructure.disable(['add', 'btnClear', 'termType'], false);
 			/*
 			$('#<portlet:namespace/>add').prop('disabled', false);
@@ -43,61 +64,60 @@ $(document).ready(function(){
 		
 	}
 	
-	setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>termType').val() ), false );
+	setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>termType').val() ) );
 	
 	/**************************************************************
 	* Change Event handlers for form controls 
 	***************************************************************/
-	$('#<portlet:namespace/>termDelimiter').change(function(eventObj){
+	SX.DataStructure.$TERM_DELIMITER_FORM_CTRL.change(function(eventObj){
 			dataStructure.getTermDelimiterFormValue( true );
 	});
 
-	$('#<portlet:namespace/>termDelimiterPosition').change(function(eventObj){
+	SX.DataStructure.$TERM_DELIMITER_POSITION_FORM_CTRL.change(function(eventObj){
 			dataStructure.getTermDelimiterPositionFormValue( true );
 	});
 	
-	$('#<portlet:namespace/>termValueDelimiter').change(function(eventObj){
+	SX.DataStructure.$TERM_VALUE_DELIMITER_FORM_CTRL.change(function(eventObj){
 			dataStructure.getTermValueDelimiterFormValue( true );
 	});
 
-	$('#<portlet:namespace/>matrixBracketType').change(function(eventObj){
+	SX.DataStructure.$MATRIX_BRACKET_TYPE_FORM_CTRL.change(function(eventObj){
 			dataStructure.getMatrixBracketTypeFormValue( true );
 	});
 	
-	$('#<portlet:namespace/>matrixElementDelimiter').change(function(eventObj){
+	SX.DataStructure.$MATRIX_ELEMENT_DELIMITER_FORM_CTRL.change(function(eventObj){
 			dataStructure.getMatrixElementDelimiterFormValue( true );
 	});
 
-	$('#<portlet:namespace/>commentChar').change(function(eventObj){
+	SX.DataStructure.$COMMENT_CHAR_FORM_CTRL.change(function(eventObj){
 			dataStructure.getCommentCharFormValue( true );
 	});
 	
-	$('#<portlet:namespace/>termType').change(function(eventObj){
+	SX.Term.$TERM_TYPE_FORM_CTRL.change(function(eventObj){
 		let selectedTermType = currentTerm.getTermTypeFormValue();
 		
-		console.log( 'Changed type: '+selectedTermType );
 		if( selectedTermType === currentTerm.termType ){
 			// Do nothing
 			return;
 		}
 		
-		if( dataStructure.previewed( currentTerm ) ){
+		if( currentTerm.isRendered() ){
 			$.alert({
 				title: '<liferay-ui:message key="term-type-change-alert"/>',
 				content: 'how-to-term-type-change'
 			});
 			
-			setCurrentTerm( currentTerm, true );
+			setCurrentTerm( currentTerm );
 		}
 		else{
-			setCurrentTerm( dataStructure.createTerm( selectedTermType ), false );
+			setCurrentTerm( dataStructure.createTerm( selectedTermType ) );
 		}
 	});
 	
-	$('#<portlet:namespace/>termName').change(function(eventObj){
-		if( dataStructure.previewed( currentTerm ) ){
+	SX.Term.$TERM_NAME_FORM_CTRL.change(function(eventObj){
+		if( currentTerm.$rendered ){
 			// It means the current term is one of the data structure and previewed on the preview panel.
-			// Therefore, we must confirm that the term's name be changed and change preview.
+			// Therefore, we must confirm that the term's name be changed before the preview changed.
 			$.confirm({
 				title: '<liferay-ui:message key="select-term-type" />',
 				content: '<liferay-ui:message key="this-term-is-previewed-are-you-sure-to-change-the-name-of-the-term" />',
@@ -117,7 +137,7 @@ $(document).ready(function(){
 								if( currentTerm.validateNameExpression( changedName ) === true ){
 									currentTerm.termName = changedName;
 									
-									dataStructure.refreshSelectedTermPreview();
+									dataStructure.refreshTerm( currentTerm );
 								}
 								else{
 									$.alert( 'Term Name[' + changedName +'] is unvalid. Try another one.');
@@ -138,12 +158,12 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#<portlet:namespace/>termVersion').change(function(eventObj){
+	SX.Term.$TERM_VERSION_FORM_CTRL.change(function(eventObj){
 		const changedVersion = currentTerm.getTermVersionFormValue();
 		
 		let validated;
-		if( dataStructure.previewed( currentTerm ) ){
-			validated = Term.validateTermVersion( changedVersion, currentTerm.termVersion );
+		if( currentTerm.$rendered ){
+			validated = SX.Term.validateTermVersion( changedVersion, currentTerm.termVersion );
 		}
 		else{
 			validated = SX.Term.validateTermVersion( changedVersion );
@@ -158,12 +178,10 @@ $(document).ready(function(){
 		} 
 	});
 
-	$('#<portlet:namespace/>termDisplayName').change(function(eventObj){
+	SX.Term.$TERM_DISPLAY_NAME_FORM_CTRL.change(function(eventObj){
 		currentTerm.getDisplayNameFormValue(true);
 	
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>termDefinition').change(function(eventObj){
@@ -172,16 +190,12 @@ $(document).ready(function(){
 
 	$('#<portlet:namespace/>termTooltip').change(function(eventObj){
 		currentTerm.getTooltipFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>placeHolder').change(function(eventObj){
 		currentTerm.getPlaceHolderFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>synonyms').change(function(eventObj){
@@ -190,16 +204,12 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>mandatory').change(function(eventObj){
 		currentTerm.getMandatoryFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>value').change(function(eventObj){
 		currentTerm.getValueFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>minLength').change(function(eventObj){
@@ -211,9 +221,7 @@ $(document).ready(function(){
 		}
 		else{
 			currentTerm.minLength = changedValue;
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
+			dataStructure.refreshTerm( currentTerm );
 		}
 	});
 	
@@ -226,17 +234,13 @@ $(document).ready(function(){
 		}
 		else{
 			currentTerm.getMaxLengthFormValue(true);
-			if( dataStructure.previewed( currentTerm ) ){
-				dataStructure.refreshSelectedTermPreview();
-			}
+			dataStructure.refreshTerm( currentTerm );
 		}
 	});
 
 	$('#<portlet:namespace/>multipleLine').change(function(eventObj){
 		currentTerm.getMultipleLineFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>validationRule').change(function(eventObj){
@@ -258,16 +262,14 @@ $(document).ready(function(){
 			//$('#<portlet:namespace/>minBoundary').prop('disabled', false);
 		}
 		
-		if( (!preValue !== !currentTerm.minValue) && dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
+		if( preValue !== currentTerm.minValue ){
+			dataStructure.refreshTerm( currentTerm );
 		}
 	});
 
 	$('#<portlet:namespace/>minBoundary').change(function(eventObj){
 		currentTerm.getMinBoundaryFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>maxValue').change(function(eventObj){
@@ -285,30 +287,24 @@ $(document).ready(function(){
 //			$('#<portlet:namespace/>maxBoundary').prop('disabled', false);
 		}
 		
-		if( (!preValue !== !currentTerm.maxValue) && dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
+		if( preValue !== currentTerm.maxValue ){
+			dataStructure.refreshTerm( currentTerm );
 		}
 	});
 
 	$('#<portlet:namespace/>maxBoundary').change(function(eventObj){
 		currentTerm.getMaxBoundaryFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>unit').change(function(eventObj){
 		currentTerm.getUnitFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	$('#<portlet:namespace/>uncertainty').change(function(eventObj){
 		currentTerm.getUncertaintyFormValue(true);
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 
 	$('#<portlet:namespace/>sweepable').change(function(eventObj){
@@ -325,9 +321,7 @@ $(document).ready(function(){
 			currentTerm.configureMultipleSeletionMode( false );
 		}
 		
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	SX.ListTerm.$OPTION_LABEL.change(function(event){
@@ -342,9 +336,7 @@ $(document).ready(function(){
 		
 		currentTerm.setOptionLabelMap( labelMap );
 		
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	SX.ListTerm.$OPTION_VALUE.change(function(event){
@@ -359,9 +351,7 @@ $(document).ready(function(){
 		
 		currentTerm.setOptionValue( value );
 		
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	SX.ListTerm.$OPTION_SELECTED.change(function(event){
@@ -369,9 +359,7 @@ $(document).ready(function(){
 		
 		currentTerm.setOptionSelected( value );
 		
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
 	SX.ListTerm.$OPTION_ACTIVE_TERMS.change(function(event){
@@ -381,75 +369,148 @@ $(document).ready(function(){
 		
 		console.log('active terms: ', activeTermNames);
 	});
+	
+	$('input[name="<portlet:namespace/>booleanDisplayStyle"]').change(function(event){
+		console.log( 'Boolean display style changed: ', currentTerm.getDisplayStyleFormValue( true ) );
+		
+		dataStructure.refreshTerm( currentTerm );
+	});
 
 
 	/**************************************************************
 	* Custom Liferay event handlers
 	**************************************************************/
 	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_DELETED, function(eventData){
+	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_DELETED, function(event){
+		let eventData = event.sxeventData;
+		 
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 		
-		dataStructure.removeTerm( eventData.deletedTerm.termName );
+		dataStructure.removeTerm( eventData.term.termName );
 		
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 	});
 	
-	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(eventData){
+	Liferay.on(SX.SXIcecapEvents.DATATYPE_PREVIEW_TERM_SELECTED, function(event){
+		let eventData = event.sxeventData;
+		console.log('DATATYPE_PREVIEW_TERM_SELECTED', eventData);
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 		
-		if( dataStructure.selectedTerm === eventData.selectedTerm ){
+		if( currentTerm === eventData.term ){
 			return;
 		}
 		
-		dataStructure.selectedTerm = eventData.selectedTerm;
-		setCurrentTerm( eventData.selectedTerm, true );
+		setCurrentTerm( eventData.term );
 	});
 
 	
-	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_REMOVED, function( eventData ){
+	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_REMOVED, function( event ){
+		let eventData = event.sxeventData;
+				
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 
-		let removedOption = eventData.removedOption;
+		let removedOption = eventData.option;
 
 		currentTerm.removeOption( removedOption.value );
 		
 		dataStructure.render( SX.SXConstants.FOR_PREVIEW );
 	});
 
-	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_SELECTED, function( eventData ){
+	Liferay.on( SX.SXIcecapEvents.LIST_OPTION_PREVIEW_SELECTED, function( event ){
+		let eventData = event.sxeventData;
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 
-		currentTerm.initOptionFormValues( eventData.highlightedOption );
+		currentTerm.initOptionFormValues( eventData.option );
 		currentTerm.highlightOptionPreview(); 
 	});
 	
-	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS, function( eventData ){
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS, function( event ){
+		let eventData = event.sxeventData;
 		console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_SHOW_TERMS received...', eventData);
 		
 		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
 			return;
 		}
 		
-		dataStructure.activateDependentTerms( eventData.termName, eventData.optionValue, SX.SXConstants.FOR_PREVIEW );
+		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.SXConstants.FOR_PREVIEW );
+	});
+	
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED, function( event ){
+		let eventData = event.sxeventData;
+		console.log( 'SX.SXIcecapEvents.DATATYPE_FORM_UI_CHECKBOX_CHANGED received...', eventData);
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+		
+		dataStructure.activateDependentTerms( eventData.term, eventData.optionValue, SX.SXConstants.FOR_PREVIEW );
+	});
+	
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM, function( event ){
+		let eventData = event.sxeventData;
+		console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_REMOVE_TERM received...', eventData);
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+		
+		dataStructure.removeTerm( eventData.term );
+		
+		console.log('Data Structure: ', dataStructure );
+	});
+	
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM, function( event ){
+		let eventData = event.sxeventData;
+		console.log( 'SX.SXIcecapEvents.DATATYPE_PREVIEW_DELETE_TERM received...', eventData);
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+		
+		dataStructure.deleteTerm( eventData.term );
+		
+		console.log('Data Structure: ', dataStructure );
 	});
 
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED, function( event ){
+		let eventData = event.sxeventData;
+		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_VALUE_CHANGED received...', eventData);
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+	});
+	
+	Liferay.on( SX.SXIcecapEvents.DATATYPE_SDE_UNCERTAINTY_CHANGED, function( event ){
+		let eventData = event.sxeventData;
+		console.log( 'SX.SXIcecapEvents.DATATYPE_SDE_UNCERTAINTY_CHANGED received...', eventData);
+		
+		if( eventData.targetPortlet !== '<portlet:namespace/>' ){
+			return;
+		}
+	});
+	
 
 	/*******************************************************************************
 	* Event handlers for buttons
 	*******************************************************************************/
 	$('#<portlet:namespace/>btnNewTerm').click(function(){
+		// dataStructure.disable(['termType'], false);
+		
+		setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>dlgTermType').val() ) );
+		
+		/*
 		$.confirm({
 			title: '<liferay-ui:message key="select-term-type" />',
-			content: $('#<portlet:namespace/>termTypeSelectorDlg' ).html(),
+			content: $('#<portlet:namespace/>termTypeSelector').html(),
 			type: 'orange',
 			typeAnimated: true,
 			buttons:{
@@ -457,7 +518,7 @@ $(document).ready(function(){
 					text: 'OK',
 					btnClass: 'btn-blue',
 					action: function(){
-						setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>dlgTermType').val() ), false );
+						setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>dlgTermType').val() ) );
 					}
 				},
 				cancel: function(){
@@ -466,10 +527,12 @@ $(document).ready(function(){
 			},
 			draggable: true
 		});
+		*/
 	});
 
 	$('#<portlet:namespace/>btnCopyTerm').click(function(){
-		setCurrentTerm( dataStructure.copyTerm( currentTerm ), false );
+		// setCurrentTerm( dataStructure.copyTerm( currentTerm ) );
+		dataStructure.addTestSet( SX.SXConstants.FOR_PREVIEW );
 	});
 	
 	$('#<portlet:namespace/>btnClear').click(function(){
@@ -481,10 +544,16 @@ $(document).ready(function(){
 	});
 	
 	SX.ListTerm.$BTN_NEW_OPTION.click(function(){
+		
+		console.log( 'click new button' );
+		
+		/*
+		$listOptionManagementDlg.dialog( 'open' );
+		*/
+	
 		currentTerm.initOptionFormValues();
 		dataStructure.disable(['btnAddOption'], false);
-
-		
+	
 		/*
 		console.log($('#<portlet:namespace/>optionManagementDlg' ).html());
 		$.confirm({
@@ -517,16 +586,42 @@ $(document).ready(function(){
 		
 	});
 	
+	SX.ListTerm.$BTN_CHOOSE_ACTIVE_TERMS.click(function(event){
+		let option = currentTerm.getHighlightedOption();
+		if( !option ){
+			option = currentTerm.addOption();
+			if( !option ){
+				return;
+			}
+		}
+		
+		dataStructure.disable(['btnAddOption'], true);
+
+		dataStructure.chooseActiveTerms( currentTerm, option );		
+		dataStructure.refreshTerm( currentTerm );
+	});
+	
+	SX.BooleanTerm.$TRUE_ACTIVE_TERMS_BUTTON.click(function(event){
+		dataStructure.chooseActiveTerms( currentTerm, currentTerm.getTrueOption() );
+	});
+	
+	SX.BooleanTerm.$FALSE_ACTIVE_TERMS_BUTTON.click(function(event){
+		dataStructure.chooseActiveTerms( currentTerm, currentTerm.getFalseOption() );
+	});
+	
+	SX.GroupTerm.$BTN_CHOOSE_GROUP_TERMS.click(function(event){
+		console.log( 'Current Term before group: ', currentTerm );
+		dataStructure.chooseGroupTerms( currentTerm );
+	});
+	
 	$('#<portlet:namespace/>btnAddOption').click(function(event){
 		currentTerm.addOption();
 		dataStructure.disable(['btnAddOption'], true);
 		
-		if( dataStructure.previewed( currentTerm ) ){
-			dataStructure.refreshSelectedTermPreview();
-		}
+		dataStructure.refreshTerm( currentTerm );
 	});
 	
-	$('#<portlet:namespace/>add').click(function(){
+	$('#<portlet:namespace/>btnAdd').click(function(){
 		/*
 		$.ajax({
 			url: '<%= renderTermResourceCommandURL.toString() %>',
@@ -547,11 +642,11 @@ $(document).ready(function(){
 		});
 		*/
 		
-		if( dataStructure.addTerm( currentTerm, true ) ){
+		if( dataStructure.addTerm( currentTerm,  SX.SXConstants.FOR_PREVIEW, true ) ){
 			dataStructure.disable(['add', 'btnClear', 'termType'], true);
 			/*
 			$('#<portlet:namespace/>add').prop('disabled', true);
-			$('#<portlet:namespace/>btnClear').prop('disabled', true);
+			$('#<portlet:namespace/>btnClear').prop('disabled', true); 
 			*/
 		}
 		
@@ -561,5 +656,7 @@ $(document).ready(function(){
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
 		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
 	});
+	
 });
-</script>
+</aui:script>
+

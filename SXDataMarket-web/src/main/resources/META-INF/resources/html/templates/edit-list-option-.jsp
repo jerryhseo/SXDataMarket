@@ -1,17 +1,11 @@
 
 <%@ include file="../init.jsp" %>
 
-<%
-	String name = ParamUtil.getString(request, "controlName" );
-	String label = ParamUtil.getString(request, "controlLabel");
-	boolean required = ParamUtil.getBoolean(request, "controlRequired" );
-	String helpMessage = ParamUtil.getString(request, "controlHelpMessage");
-	String defaultValue = ParamUtil.getString(request, "controlDefaultValue", "");
-	
-%>
-
-<div id="<portlet:namespace/>templateLocalizedInput">
-	<aui:field-wrapper name="<%= name %>" label="<%= label %>" helpMessage="<%= helpMessage %>"> 
-		<liferay-ui:input-localized  name="<%= name %>" xml="<%=defaultValue %>"></liferay-ui:input-localized>
-	</aui:field-wrapper>
+<div id="templateEditListOptionDlg">
+		<aui:field-wrapper name="optionLabel" label="option-label" required="true" helpMessage="option-label-help">
+		<liferay-ui:input-localized name="optionLabel" xml=""></liferay-ui:input-localized>
+		</aui:field-wrapper> 
+		<aui:input id="optionValue" name="optionValue" label="option-value" required="true" helpMessage="option-value-help"></aui:input> 
+		<aui:input type="checkbox" id="optionSelected" name="optionSelected" label="selected" helpMessage="option-selected-help"></aui:input>
+		<div id="<portlet:namespace/>activeTerms" ></div>
 </div>
