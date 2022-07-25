@@ -38,19 +38,17 @@ $(document).ready(function(){
 		dataStructure.replaceVisibleTypeSpecificSection( currentTerm.termType );
 		currentTerm.setAllFormValues();
 		
-		if( dataStructure.highlightTerm( currentTerm ) ){
-			dataStructure.disable(['add', 'btnClear', 'termType'], true);
-			/*
-			$('#<portlet:namespace/>add').prop('disabled', true);
-			$('#<portlet:namespace/>btnClear').prop('disabled', true);
-			*/
+		if( currentTerm.isRendered() ){
+			dataStructure.disable(['btnAdd', 'btnClear', 'btnNewTerm', 'termType'], true);
+			dataStructure.disable(['btnUp', 'btnDown'], false);
 		}
 		else{
-			dataStructure.disable(['add', 'btnClear', 'termType'], false);
-			/*
-			$('#<portlet:namespace/>add').prop('disabled', false);
-			$('#<portlet:namespace/>btnClear').prop('disabled', false);
-			*/
+			dataStructure.disable(['btnAdd', 'btnClear', 'btnNewTerm', 'termType'], false);
+			dataStructure.disable(['btnUp', 'btnDown'], true);
+		}
+		
+		if( currentTerm.isGroupTerm() ){
+			dataStructure.disable(['mandatory'], true);
 		}
 		
 	};
@@ -405,6 +403,7 @@ $(document).ready(function(){
 		}
 		
 		setCurrentTerm( eventData.term );
+		dataStructure.highlightTerm( currentTerm );
 	});
 
 	
@@ -655,6 +654,22 @@ $(document).ready(function(){
 	
 	$('#<portlet:namespace/>btnRefresh').click(function(event){
 		dataStructure.render(SX.SXConstants.FOR_PREVIEW);
+	});
+	
+	$('#<portlet:namespace/>btnUp').click(function(event){
+		if( !currentTerm.isRendered() ){
+			return;
+		}
+		
+		dataStructure.moveUpTerm( currentTerm );
+	});
+	
+	$('#<portlet:namespace/>btnDown').click(function(event){
+		if( !currentTerm.isRendered() ){
+			return;
+		}
+		
+		dataStructure.moveDownTerm( currentTerm );
 	});
 	
 });
