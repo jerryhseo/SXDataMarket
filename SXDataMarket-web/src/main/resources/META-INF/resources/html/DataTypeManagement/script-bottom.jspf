@@ -306,7 +306,6 @@ $(document).ready(function(){
 	
 	$('input[name="<portlet:namespace/>listDisplayStyle"]').change(function(eventObj){
 		currentTerm.getDisplayStyleFormValue(true);
-		
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
