@@ -149,7 +149,7 @@
 							</svg>
 					</span>
 				</label>
-				<table class="table table-striped" style="border:solid 2px grey; borderStyle:inset; width:100%; font-size:small; margin-bottom:20px">
+				<table class="table table-striped" style="max-width:600px;border:solid 2px grey; borderStyle:inset; width:100%; font-size:small; margin-bottom:20px">
 					<tbody id="<portlet:namespace/>options">
 					</tbody>
 				</table>

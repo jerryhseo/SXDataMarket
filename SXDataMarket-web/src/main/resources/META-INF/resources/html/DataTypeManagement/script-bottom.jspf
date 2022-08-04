@@ -28,8 +28,12 @@ $(document).ready(function(){
 				});
 	****************************************************************/
 	
-	SX.DataStructure.FORM_RENDER_URL =  '<%= renderTermResourceCommandURL.toString() %>';
-	let dataStructure = SX.newDataStructure();
+	// SX.DataStructure.FORM_RENDER_URL =  '<%= renderTermResourceCommandURL.toString() %>';
+	
+	let dataStructure;
+	let jsonDataStructure = JSON.parse('<%= (dataStructure == null) ? "null" : dataStructure.toJSONString() %>');
+	console.log('jsonDataStructure: ', jsonDataStructure);
+	dataStructure = SX.newDataStructure( jsonDataStructure );
 	
 	let currentTerm = null;
 	
@@ -52,15 +56,6 @@ $(document).ready(function(){
 		}
 		
 	};
-	
-	let hasDataStructure = <%= hasDataStructure %>;
-
-	if( hasDataStructure ){
-		
-	}
-	else{
-		
-	}
 	
 	setCurrentTerm( dataStructure.createTerm( $('#<portlet:namespace/>termType').val() ) );
 	
@@ -677,7 +672,23 @@ $(document).ready(function(){
 			return;
 		}
 		
-		console.log('')
+		$.ajax({
+			url: '<%= saveDataStructureResourceCommandURL.toString() %>',
+			method: 'post',
+			dataType: 'text',
+			data: {
+				<portlet:namespace/>dataTypeId: '<%= String.valueOf(dataTypeId) %>',
+				<portlet:namespace/>dataStructure: JSON.stringify(dataStructure)
+			},
+			success: function( result ){
+				console.log( result );
+			},
+			error: function(){
+				console.log('error');
+			}
+		});
+		
+		console.log('Data Structure: ', JSON.stringify(dataStructure, null, 4));
 	});
 });
 </aui:script>

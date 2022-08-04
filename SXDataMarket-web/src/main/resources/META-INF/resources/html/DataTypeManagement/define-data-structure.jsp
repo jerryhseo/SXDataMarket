@@ -20,7 +20,9 @@
 	JSONObject dataStructure = null;
 	boolean hasDataStructure = dataType.getHasDataStructure();
 	
+	System.out.println( "hasDataStructure: " + hasDataStructure );
 	if( hasDataStructure ){
+		System.out.println("Dropped here...");
 		dataStructure = (JSONObject)renderRequest.getAttribute(IcecapDataTypeWebKeys.DATA_STRUCTURE);
 	}
 	
@@ -36,9 +38,6 @@
 
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/css/main.css">
 
-<script>
-</script>
-
 <portlet:resourceURL var="loadDataStructureResourceCommandURL">
 	<portlet:param name="dataTypeId" value="<%= String.valueOf(dataType.getDataTypeId()) %>"/>
 </portlet:resourceURL>
@@ -50,6 +49,10 @@
 <portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_RENDER_DATATYPE %>" var="renderDataTypeResourceCommandURL">
 	<portlet:param name="cmd" value="<%= IcecapDataTypeConstants.RENDER_DATATYPE %>"/>
 </portlet:resourceURL>
+
+<portlet:resourceURL id="<%= IcecapDataTypeMVCCommands.RESOURCE_DATATYPE_SAVE_STRUCTURE %>" var="saveDataStructureResourceCommandURL">
+</portlet:resourceURL>
+
 
 <portlet:renderURL var="templateEditListOptionDlg">
 	<portlet:param name="jspPath" value="/html/templates/edit-list-option.jsp"></portlet:param>
