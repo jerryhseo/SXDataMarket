@@ -307,13 +307,6 @@ $(document).ready(function(){
 	$('input[name="<portlet:namespace/>listDisplayStyle"]').change(function(eventObj){
 		currentTerm.getDisplayStyleFormValue(true);
 		
-		if( currentTerm.displayStyle === SX.SXConstants.DISPLAY_STYLE_CHECK ){
-			currentTerm.configureMultipleSeletionMode( true );
-		}
-		else{
-			currentTerm.configureMultipleSeletionMode( false );
-		}
-		
 		dataStructure.refreshTerm( currentTerm );
 	});
 	
