@@ -149,10 +149,12 @@
 							</svg>
 					</span>
 				</label>
-				<table class="table table-striped" style="max-width:600px;border:solid 2px grey; borderStyle:inset; width:100%; font-size:small; margin-bottom:20px">
-					<tbody id="<portlet:namespace/>options">
-					</tbody>
-				</table>
+				<div style=""max-height:400px; overflow:auto;">
+					<table class="table table-striped" style="border:solid 2px grey; borderStyle:inset; width:100%; font-size:small; margin-bottom:20px">
+						<tbody id="<portlet:namespace/>options">
+						</tbody>
+					</table>
+				</div>
 				<div id="<portlet:namespace/>manageListOptions">
 					<aui:fieldset-group markupView="lexicon" >
 							<aui:fieldset label="edit-list-optione"  helpMessage="edit-list-option-help">

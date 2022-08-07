@@ -54,6 +54,9 @@ $(document).ready(function(){
 		if( currentTerm.isGroupTerm() ){
 			dataStructure.disable(['mandatory'], true);
 		}
+		else{
+			dataStructure.disable(['mandatory'], false);
+		}
 		
 	};
 	
